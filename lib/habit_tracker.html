@@ -1,0 +1,1405 @@
+<!DOCTYPE html>
+<!--
+=== 2026 ISLAMIC HABIT TRACKER ===
+Created by: Hamzah
+Date: January 1, 2026
+Copyright © 2026 Hamzah. All rights reserved.
+Personal Habit Tracking System
+-->
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2026 Islamic Habit Tracker - Hamzah's Personal System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            opacity: 0.9;
+            font-size: 1.1rem;
+        }
+
+        .nav {
+            display: flex;
+            background: #f8f9fa;
+            border-bottom: 1px solid #dee2e6;
+        }
+
+        .nav-btn {
+            flex: 1;
+            padding: 15px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background 0.3s;
+        }
+
+        .nav-btn.active {
+            background: white;
+            border-bottom: 3px solid #667eea;
+            font-weight: 600;
+        }
+
+        .nav-btn:hover {
+            background: #e9ecef;
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        .tab {
+            display: none;
+        }
+
+        .tab.active {
+            display: block;
+        }
+
+        /* Daily Tracker Styles */
+        .date-selector {
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .date-selector input {
+            padding: 12px;
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            font-size: 1rem;
+            text-align: center;
+        }
+
+        .goals-grid {
+            display: grid;
+            gap: 15px;
+        }
+
+        .goal-item {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 12px;
+            border: 2px solid transparent;
+            transition: all 0.3s;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .goal-item.completed {
+            background: #d4edda;
+            border-color: #28a745;
+        }
+
+        .goal-info {
+            flex: 1;
+        }
+
+        .goal-title {
+            font-weight: 600;
+            font-size: 1.1rem;
+            margin-bottom: 5px;
+        }
+
+        .goal-category {
+            color: #6c757d;
+            font-size: 0.9rem;
+        }
+
+        .goal-checkbox {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            border: 3px solid #dee2e6;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.3s;
+        }
+
+        .goal-checkbox.checked {
+            background: #28a745;
+            border-color: #28a745;
+        }
+
+        .goal-checkbox.checked::after {
+            content: '✓';
+            color: white;
+            font-weight: bold;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        /* Analytics Styles */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            opacity: 0.9;
+        }
+
+        .progress-bar {
+            background: #e9ecef;
+            border-radius: 10px;
+            height: 20px;
+            margin: 15px 0;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            height: 100%;
+            transition: width 0.5s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 0.8rem;
+        }
+
+        /* Goal Management Styles */
+        .add-goal-form {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: transform 0.2s;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+        }
+
+        .goals-list {
+            display: grid;
+            gap: 15px;
+        }
+
+        .goal-management-item {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* Login Styles */
+        .login-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .login-box {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            max-width: 400px;
+            width: 100%;
+            text-align: center;
+        }
+
+        .login-box h1 {
+            margin-bottom: 10px;
+            color: #667eea;
+        }
+
+        .login-form {
+            margin: 30px 0;
+        }
+
+        .login-form h3 {
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #6c757d 0%, #5a6268 100%);
+            margin-left: 10px;
+        }
+
+        .logout-btn {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            border: 1px solid rgba(255,255,255,0.3);
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            margin-left: 10px;
+        }
+
+        .logout-btn:hover {
+            background: rgba(255,255,255,0.3);
+        }
+
+        .admin-btn {
+            background: rgba(255,215,0,0.8);
+            color: #333;
+            border: 1px solid rgba(255,215,0,0.6);
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .admin-btn:hover {
+            background: rgba(255,215,0,1);
+        }
+
+        .header-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        /* Modal Styles */
+        .modal {
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 12px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        }
+
+        .modal-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 12px 12px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-body {
+            padding: 25px;
+        }
+
+        .close-btn {
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            opacity: 0.8;
+        }
+
+        .close-btn:hover {
+            opacity: 1;
+        }
+
+        .user-stat-item {
+            background: #f8f9fa;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+        }
+
+        .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .stat-box {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+        
+        /* Profile Management Styles */
+        .profile-management {
+            margin-top: 40px;
+            padding-top: 30px;
+            border-top: 2px solid #dee2e6;
+        }
+        
+        .danger-zone {
+            background: #fff5f5;
+            border: 2px solid #fed7d7;
+            border-radius: 12px;
+            padding: 25px;
+            margin-top: 20px;
+        }
+        
+        .danger-zone h4 {
+            color: #e53e3e;
+            margin-bottom: 10px;
+        }
+        
+        .danger-zone p {
+            color: #744210;
+            margin-bottom: 20px;
+            font-size: 0.95rem;
+        }
+        
+        .btn-small {
+            padding: 6px 12px;
+            font-size: 0.8rem;
+        }
+        
+        .admin-badge {
+            background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
+            color: #333;
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        
+        .user-stat-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .user-info {
+            flex: 1;
+        }
+        
+        /* Confirmation Dialog Styles */
+        .confirm-dialog {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+        }
+        
+        .confirm-content {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            max-width: 400px;
+            text-align: center;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.3);
+        }
+        
+        .confirm-content h3 {
+            color: #e53e3e;
+            margin-bottom: 15px;
+        }
+        
+        .confirm-content p {
+            margin-bottom: 25px;
+            color: #555;
+        }
+        
+        .confirm-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+        
+        .btn-cancel {
+            background: #6c757d;
+        }
+        
+        .btn-cancel:hover {
+            background: #5a6268;
+        }
+        
+        /* Profile Management Styles */
+        .profile-management {
+            margin-top: 40px;
+            padding-top: 30px;
+            border-top: 2px solid #dee2e6;
+        }
+        
+        .danger-zone {
+            background: #fff5f5;
+            border: 2px solid #fed7d7;
+            border-radius: 12px;
+            padding: 25px;
+            margin-top: 20px;
+        }
+        
+        .danger-zone h4 {
+            color: #e53e3e;
+            margin-bottom: 10px;
+        }
+        
+        .danger-zone p {
+            color: #744210;
+            margin-bottom: 20px;
+            font-size: 0.95rem;
+        }
+        
+        .btn-small {
+            padding: 6px 12px;
+            font-size: 0.8rem;
+        }
+        
+        .admin-badge {
+            background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
+            color: #333;
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        
+        .user-stat-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .user-info {
+            flex: 1;
+        }
+        
+        /* Confirmation Dialog Styles */
+        .confirm-dialog {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+        }
+        
+        .confirm-content {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            max-width: 400px;
+            text-align: center;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.3);
+        }
+        
+        .confirm-content h3 {
+            color: #e53e3e;
+            margin-bottom: 15px;
+        }
+        
+        .confirm-content p {
+            margin-bottom: 25px;
+            color: #555;
+        }
+        
+        .confirm-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+        
+        .btn-cancel {
+            background: #6c757d;
+        }
+        
+        .btn-cancel:hover {
+            background: #5a6268;
+        }
+
+        .error-message {
+            color: #dc3545;
+            margin-top: 15px;
+            font-size: 0.9rem;
+        }
+
+        .copyright {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #dee2e6;
+            color: #6c757d;
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .login-box {
+                padding: 30px 20px;
+                margin: 20px;
+            }
+
+            .logout-btn {
+                position: static;
+                margin-top: 10px;
+                width: 100%;
+            }
+
+            .btn-secondary {
+                margin-left: 0;
+                margin-top: 10px;
+                width: 100%;
+            }
+            body {
+                padding: 10px;
+            }
+
+            .container {
+                border-radius: 12px;
+            }
+
+            .header {
+                padding: 20px;
+            }
+
+            .header h1 {
+                font-size: 1.5rem;
+            }
+
+            .content {
+                padding: 20px;
+            }
+
+            .nav {
+                flex-direction: column;
+            }
+
+            .nav-btn {
+                padding: 12px;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 15px;
+            }
+
+            .stat-card {
+                padding: 20px;
+            }
+
+            .stat-number {
+                font-size: 2rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .confirm-content {
+                margin: 20px;
+                padding: 25px;
+            }
+            
+            .confirm-buttons {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .user-stat-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+            
+            .danger-zone {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Login Screen -->
+    <div id="loginScreen" class="login-container">
+        <div class="login-box">
+            <h1>🕌 Islamic Habit Tracker</h1>
+            <p>Created by <strong>Hamzah</strong></p>
+            <p>© 2026 - Personal Habit Tracking System</p>
+            
+            <div class="login-form">
+                <h3>Login or Create Profile</h3>
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" placeholder="Enter your username">
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" placeholder="Enter your password">
+                </div>
+                <button class="btn" onclick="handleLogin()">Login</button>
+                <button class="btn btn-secondary" onclick="createNewUser()">Create New User</button>
+                <div id="loginError" class="error-message"></div>
+            </div>
+            
+            <div class="copyright">
+                <small>This system belongs to Hamzah. Unauthorized use prohibited.</small>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main App (Hidden initially) -->
+    <div id="mainApp" class="container" style="display: none;">
+        <div class="header">
+            <h1>🕌 2026 Islamic Habit Tracker</h1>
+            <p>Assalamu Alaikum <span id="currentUserName"></span>! Track your blessed habits</p>
+            <div class="header-buttons">
+                <button id="adminStatsBtn" class="admin-btn" onclick="showUserStats()" style="display: none;">📊 User Stats</button>
+                <button class="logout-btn" onclick="logout()">Logout</button>
+            </div>
+        </div>
+
+        <nav class="nav">
+            <button class="nav-btn active" onclick="showTab('daily')">📅 Daily Tracker</button>
+            <button class="nav-btn" onclick="showTab('analytics')">📊 Analytics</button>
+            <button class="nav-btn" onclick="showTab('goals')">⚙️ Manage Goals</button>
+        </nav>
+
+        <!-- User Stats Modal -->
+        <div id="userStatsModal" class="modal" style="display: none;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>📊 System Usage Statistics</h3>
+                    <span class="close-btn" onclick="closeUserStats()">&times;</span>
+                </div>
+                <div id="userStatsContent" class="modal-body">
+                    <!-- Stats content will be populated here -->
+                </div>
+            </div>
+        </div>
+
+        <div class="content">
+            <!-- Daily Tracker Tab -->
+            <div id="daily" class="tab active">
+                <div class="date-selector">
+                    <input type="date" id="selectedDate" onchange="loadDailyData()">
+                </div>
+                
+                <div id="dailyGoals" class="goals-grid">
+                    <!-- Goals will be populated here -->
+                </div>
+            </div>
+
+            <!-- Analytics Tab -->
+            <div id="analytics" class="tab">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-number" id="totalGoals">0</div>
+                        <div class="stat-label">Total Goals</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="todayCompletion">0%</div>
+                        <div class="stat-label">Today's Progress</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="weeklyAvg">0%</div>
+                        <div class="stat-label">Weekly Average</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="currentStreak">0</div>
+                        <div class="stat-label">Current Streak</div>
+                    </div>
+                </div>
+
+                <div id="goalProgress">
+                    <!-- Individual goal progress will be shown here -->
+                </div>
+            </div>
+
+            <!-- Goals Management Tab -->
+            <div id="goals" class="tab">
+                <div class="add-goal-form">
+                    <h3>Add New Goal</h3>
+                    <div class="form-group">
+                        <label for="goalTitle">Goal Title</label>
+                        <input type="text" id="goalTitle" placeholder="e.g., Exercise for 30 minutes">
+                    </div>
+                    <div class="form-group">
+                        <label for="goalCategory">Category</label>
+                        <select id="goalCategory">
+                            <option value="Worship">🕌 Worship & Spirituality</option>
+                            <option value="Health">🏃 Health & Fitness</option>
+                            <option value="Work">💼 Work & Career</option>
+                            <option value="Personal">🌱 Personal Development</option>
+                            <option value="Social">👥 Social & Relationships</option>
+                            <option value="Hobbies">🎨 Hobbies & Interests</option>
+                            <option value="Finance">💰 Finance</option>
+                        </select>
+                    </div>
+                    <button class="btn" onclick="addGoal()">Add Goal</button>
+                </div>
+
+                <div id="goalsList" class="goals-list">
+                    <!-- Goals management list will be populated here -->
+                </div>
+                
+                <!-- Profile Management Section -->
+                <div class="profile-management">
+                    <h3>📁 Profile Management</h3>
+                    <div class="danger-zone">
+                        <h4>⚠️ Danger Zone</h4>
+                        <p>Once you delete your profile, there is no going back. Please be certain.</p>
+                        <button class="btn btn-danger" onclick="confirmDeleteProfile()">🗑️ Delete My Profile</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Your personalized Islamic daily routine goals
+        // User Management System
+        let currentUser = null;
+        let users = JSON.parse(localStorage.getItem('habitTrackerUsers')) || {};
+
+        // Login Functions
+        function handleLogin() {
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value;
+            const errorDiv = document.getElementById('loginError');
+            
+            if (!username || !password) {
+                errorDiv.textContent = 'Please enter both username and password';
+                return;
+            }
+            
+            if (users[username] && users[username].password === password) {
+                // Update last login date
+                users[username].lastLogin = new Date().toISOString().split('T')[0];
+                localStorage.setItem('habitTrackerUsers', JSON.stringify(users));
+                
+                currentUser = username;
+                document.getElementById('currentUserName').textContent = username;
+                document.getElementById('loginScreen').style.display = 'none';
+                document.getElementById('mainApp').style.display = 'block';
+                
+                // Show admin button if this is the creator (Hamzah)
+                if (username.toLowerCase() === 'hamzah' || username.toLowerCase() === 'admin') {
+                    document.getElementById('adminStatsBtn').style.display = 'block';
+                } else {
+                    document.getElementById('adminStatsBtn').style.display = 'none';
+                }
+                
+                loadUserData();
+                errorDiv.textContent = '';
+            } else {
+                errorDiv.textContent = 'Invalid username or password';
+            }
+        }
+
+        function createNewUser() {
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value;
+            const errorDiv = document.getElementById('loginError');
+            
+            if (!username || !password) {
+                errorDiv.textContent = 'Please enter both username and password';
+                return;
+            }
+            
+            if (users[username]) {
+                errorDiv.textContent = 'Username already exists';
+                return;
+            }
+            
+            if (password.length < 4) {
+                errorDiv.textContent = 'Password must be at least 4 characters';
+                return;
+            }
+            
+            // Create new user
+            users[username] = {
+                password: password,
+                goals: getDefaultGoals(),
+                completedTasks: {},
+                lastLogin: new Date().toISOString().split('T')[0],
+                created: new Date().toISOString().split('T')[0]
+            };
+            
+            localStorage.setItem('habitTrackerUsers', JSON.stringify(users));
+            
+            // Update last login for the new user
+            users[username].lastLogin = new Date().toISOString().split('T')[0];
+            localStorage.setItem('habitTrackerUsers', JSON.stringify(users));
+            
+            // Auto login
+            currentUser = username;
+            document.getElementById('currentUserName').textContent = username;
+            document.getElementById('loginScreen').style.display = 'none';
+            document.getElementById('mainApp').style.display = 'block';
+            
+            // Show admin button if this is the creator (Hamzah)
+            if (username.toLowerCase() === 'hamzah' || username.toLowerCase() === 'admin') {
+                document.getElementById('adminStatsBtn').style.display = 'block';
+            } else {
+                document.getElementById('adminStatsBtn').style.display = 'none';
+            }
+            
+            loadUserData();
+            errorDiv.textContent = '';
+        }
+
+        function logout() {
+            currentUser = null;
+            document.getElementById('loginScreen').style.display = 'block';
+            document.getElementById('mainApp').style.display = 'none';
+            document.getElementById('username').value = '';
+            document.getElementById('password').value = '';
+        }
+
+        function loadUserData() {
+            if (currentUser && users[currentUser]) {
+                goals = users[currentUser].goals || getDefaultGoals();
+                completedTasks = users[currentUser].completedTasks || {};
+                loadDailyData();
+                updateAnalytics();
+                updateGoalsList();
+            }
+        }
+
+        function saveUserData() {
+            if (currentUser) {
+                users[currentUser].goals = goals;
+                users[currentUser].completedTasks = completedTasks;
+                localStorage.setItem('habitTrackerUsers', JSON.stringify(users));
+            }
+        }
+
+        function getDefaultGoals() {
+            return [
+                { id: 1, title: "Wake up for Fajr", category: "Worship" },
+            { id: 2, title: "Pray Fajr", category: "Worship" },
+            { id: 3, title: "Daily Duas + Astaghfar + Durood", category: "Worship" },
+            { id: 4, title: "Give Sadqa", category: "Worship" },
+            { id: 5, title: "Gym workout", category: "Health" },
+            { id: 6, title: "Office work productive", category: "Work" },
+            { id: 7, title: "Pray Zuhr", category: "Worship" },
+            { id: 8, title: "Pray Asr", category: "Worship" },
+            { id: 9, title: "Drink 3-4 litres of water", category: "Health" },
+            { id: 10, title: "Pray Maghrib", category: "Worship" },
+            { id: 11, title: "Read Quran Shareef", category: "Worship" },
+            { id: 12, title: "Eat healthy food", category: "Health" },
+            { id: 13, title: "Skin care routine", category: "Personal" },
+            { id: 14, title: "Surah Waqiah + Surah Mulk before sleep", category: "Worship" },
+            { id: 15, title: "All 5 prayers completed?", category: "Worship" },
+            { id: 16, title: "Monthly fasting + Salat-us-Tasbeeh (2 days)", category: "Worship" },
+                { id: 17, title: "Daily Duas before sleep", category: "Worship" }
+            ];
+        }        let completedTasks = {};
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('selectedDate').value = new Date().toISOString().split('T')[0];
+            // Check if user is already logged in
+            const lastUser = localStorage.getItem('lastLoggedInUser');
+            if (lastUser && users[lastUser]) {
+                // Show login screen by default for security
+            }
+        });
+
+        // Handle Enter key in login form
+        document.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter' && document.getElementById('loginScreen').style.display !== 'none') {
+                handleLogin();
+            }
+        });
+
+        function showTab(tabName) {
+            // Hide all tabs
+            document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+            
+            // Show selected tab
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+
+            if (tabName === 'analytics') {
+                updateAnalytics();
+            } else if (tabName === 'goals') {
+                updateGoalsList();
+            }
+        }
+
+        function loadDailyData() {
+            const selectedDate = document.getElementById('selectedDate').value;
+            const dailyGoalsContainer = document.getElementById('dailyGoals');
+            
+            dailyGoalsContainer.innerHTML = '';
+            
+            goals.forEach(goal => {
+                const goalItem = document.createElement('div');
+                goalItem.className = 'goal-item';
+                
+                const isCompleted = completedTasks[selectedDate] && completedTasks[selectedDate][goal.id];
+                if (isCompleted) {
+                    goalItem.classList.add('completed');
+                }
+                
+                goalItem.innerHTML = `
+                    <div class="goal-info">
+                        <div class="goal-title">${goal.title}</div>
+                        <div class="goal-category">${goal.category}</div>
+                    </div>
+                    <div class="goal-checkbox ${isCompleted ? 'checked' : ''}" 
+                         onclick="toggleGoal(${goal.id}, '${selectedDate}')"></div>
+                `;
+                
+                dailyGoalsContainer.appendChild(goalItem);
+            });
+        }
+
+        function toggleGoal(goalId, date) {
+            if (!completedTasks[date]) {
+                completedTasks[date] = {};
+            }
+            
+            completedTasks[date][goalId] = !completedTasks[date][goalId];
+            saveUserData();
+            
+            loadDailyData();
+            updateAnalytics();
+        }
+
+        function addGoal() {
+            const title = document.getElementById('goalTitle').value;
+            const category = document.getElementById('goalCategory').value;
+            
+            if (title.trim()) {
+                const newGoal = {
+                    id: Math.max(...goals.map(g => g.id), 0) + 1,
+                    title: title,
+                    category: category
+                };
+                
+                goals.push(newGoal);
+                saveUserData();
+                
+                document.getElementById('goalTitle').value = '';
+                updateGoalsList();
+                loadDailyData();
+            }
+        }
+
+        function deleteGoal(goalId) {
+            goals = goals.filter(g => g.id !== goalId);
+            
+            // Clean up completed tasks
+            Object.keys(completedTasks).forEach(date => {
+                delete completedTasks[date][goalId];
+            });
+            saveUserData();
+            
+            updateGoalsList();
+            loadDailyData();
+        }
+
+        function updateGoalsList() {
+            const goalsListContainer = document.getElementById('goalsList');
+            goalsListContainer.innerHTML = '';
+            
+            goals.forEach(goal => {
+                const goalItem = document.createElement('div');
+                goalItem.className = 'goal-management-item';
+                goalItem.innerHTML = `
+                    <div class="goal-info">
+                        <div class="goal-title">${goal.title}</div>
+                        <div class="goal-category">${goal.category}</div>
+                    </div>
+                    <button class="btn btn-danger" onclick="deleteGoal(${goal.id})">Delete</button>
+                `;
+                goalsListContainer.appendChild(goalItem);
+            });
+        }
+
+        function updateAnalytics() {
+            const today = new Date().toISOString().split('T')[0];
+            
+            // Today's completion
+            const todayTasks = completedTasks[today] || {};
+            const completedToday = Object.values(todayTasks).filter(Boolean).length;
+            const todayPercentage = goals.length > 0 ? Math.round((completedToday / goals.length) * 100) : 0;
+            
+            // Weekly average
+            const weekAgo = new Date();
+            weekAgo.setDate(weekAgo.getDate() - 7);
+            let weeklyTotal = 0;
+            let weeklyDays = 0;
+            
+            for (let d = new Date(weekAgo); d <= new Date(); d.setDate(d.getDate() + 1)) {
+                const dateStr = d.toISOString().split('T')[0];
+                const dayTasks = completedTasks[dateStr] || {};
+                const completedDay = Object.values(dayTasks).filter(Boolean).length;
+                weeklyTotal += goals.length > 0 ? (completedDay / goals.length) * 100 : 0;
+                weeklyDays++;
+            }
+            
+            const weeklyAverage = weeklyDays > 0 ? Math.round(weeklyTotal / weeklyDays) : 0;
+            
+            // Update display
+            document.getElementById('totalGoals').textContent = goals.length;
+            document.getElementById('todayCompletion').textContent = `${todayPercentage}%`;
+            document.getElementById('weeklyAvg').textContent = `${weeklyAverage}%`;
+            
+            // Update goal progress
+            updateGoalProgress();
+        }
+
+        function updateGoalProgress() {
+            const progressContainer = document.getElementById('goalProgress');
+            progressContainer.innerHTML = '<h3>Individual Goal Progress</h3>';
+            
+            goals.forEach(goal => {
+                const last30Days = [];
+                const today = new Date();
+                
+                // Calculate actual days in current month for accurate percentage
+                const currentMonth = today.getMonth();
+                const currentYear = today.getFullYear();
+                const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+                
+                for (let i = daysInMonth - 1; i >= 0; i--) {
+                    const date = new Date(today);
+                    date.setDate(date.getDate() - i);
+                    const dateStr = date.toISOString().split('T')[0];
+                    const completed = completedTasks[dateStr] && completedTasks[dateStr][goal.id];
+                    last30Days.push(completed ? 1 : 0);
+                }
+                
+                const completedCount = last30Days.filter(Boolean).length;
+                const percentage = Math.round((completedCount / daysInMonth) * 100);
+                
+                const progressElement = document.createElement('div');
+                progressElement.style.marginBottom = '20px';
+                progressElement.innerHTML = `
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                        <span style="font-weight: 600;">${goal.title}</span>
+                        <span>${completedCount}/${daysInMonth} days (${percentage}%)</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: ${percentage}%;">
+                            ${percentage}%
+                        </div>
+                    </div>
+                `;
+                
+                progressContainer.appendChild(progressElement);
+            });
+        }
+
+        function showUserStats() {
+            const modal = document.getElementById('userStatsModal');
+            const content = document.getElementById('userStatsContent');
+            
+            // Calculate stats
+            const totalUsers = Object.keys(users).length;
+            const activeUsers = getActiveUsers();
+            const usersList = getUsersActivity();
+            
+            // Generate stats HTML
+            content.innerHTML = `
+                <div class="stat-grid">
+                    <div class="stat-box">
+                        <div class="stat-number">${totalUsers}</div>
+                        <div class="stat-label">Total Users</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-number">${activeUsers.thisWeek}</div>
+                        <div class="stat-label">Active This Week</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-number">${activeUsers.today}</div>
+                        <div class="stat-label">Active Today</div>
+                    </div>
+                </div>
+                
+                <h4>📋 User Activity Details:</h4>
+                <div class="users-list">
+                    ${usersList.map(user => `
+                        <div class="user-stat-item">
+                            <div class="user-info">
+                                <strong>👤 ${user.username}</strong><br>
+                                <small>📅 Last Active: ${user.lastActive || 'Never'}</small><br>
+                                <small>🎯 Total Goals: ${user.goalsCount}</small><br>
+                                <small>✅ Completion Rate (30 days): ${user.completionRate}%</small>
+                            </div>
+                            ${user.username.toLowerCase() !== 'hamzah' && user.username.toLowerCase() !== 'admin' ? 
+                                `<button class="btn btn-danger btn-small" onclick="adminDeleteUser('${user.username}')">🗑️ Delete</button>` : 
+                                `<span class="admin-badge">👑 Owner</span>`
+                            }
+                        </div>
+                    `).join('')}
+                </div>
+                
+                <div style="margin-top: 20px; padding: 15px; background: #e8f5e8; border-radius: 8px;">
+                    <strong>🏆 System Creator: Hamzah</strong><br>
+                    <small>© 2026 - Islamic Habit Tracker System</small>
+                </div>
+            `;
+            
+            modal.style.display = 'flex';
+        }
+        
+        function closeUserStats() {
+            document.getElementById('userStatsModal').style.display = 'none';
+        }
+        
+        function getActiveUsers() {
+            const today = new Date().toISOString().split('T')[0];
+            const weekAgo = new Date();
+            weekAgo.setDate(weekAgo.getDate() - 7);
+            const weekAgoStr = weekAgo.toISOString().split('T')[0];
+            
+            let activeToday = 0;
+            let activeThisWeek = 0;
+            
+            Object.values(users).forEach(user => {
+                const completedTasks = user.completedTasks || {};
+                
+                // Check if active today
+                if (completedTasks[today]) {
+                    activeToday++;
+                }
+                
+                // Check if active this week
+                for (let d = new Date(weekAgo); d <= new Date(); d.setDate(d.getDate() + 1)) {
+                    const dateStr = d.toISOString().split('T')[0];
+                    if (completedTasks[dateStr]) {
+                        activeThisWeek++;
+                        break;
+                    }
+                }
+            });
+            
+            return { today: activeToday, thisWeek: activeThisWeek };
+        }
+        
+        function getUsersActivity() {
+            return Object.entries(users).map(([username, userData]) => {
+                const completedTasks = userData.completedTasks || {};
+                const goals = userData.goals || [];
+                const lastLogin = userData.lastLogin || userData.created || 'Never';
+                
+                // Calculate completion rate for last 30 days
+                const thirtyDaysAgo = new Date();
+                thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+                
+                let totalDays = 0;
+                let completedDays = 0;
+                
+                for (let d = new Date(thirtyDaysAgo); d <= new Date(); d.setDate(d.getDate() + 1)) {
+                    const dateStr = d.toISOString().split('T')[0];
+                    totalDays++;
+                    
+                    if (completedTasks[dateStr]) {
+                        const dayCompleted = Object.values(completedTasks[dateStr]).filter(Boolean).length;
+                        const dayTotal = goals.length;
+                        if (dayTotal > 0 && (dayCompleted / dayTotal) > 0.5) {
+                            completedDays++;
+                        }
+                    }
+                }
+                
+                const completionRate = totalDays > 0 ? Math.round((completedDays / totalDays) * 100) : 0;
+                
+                return {
+                    username,
+                    lastActive: lastLogin,
+                    goalsCount: goals.length,
+                    completionRate
+                };
+            }).sort((a, b) => {
+                if (a.lastActive === 'Never') return 1;
+                if (b.lastActive === 'Never') return -1;
+                return new Date(b.lastActive) - new Date(a.lastActive);
+            });
+        }
+        
+        // Profile Deletion Functions
+        function confirmDeleteProfile() {
+            showConfirmDialog(
+                '⚠️ Delete Profile',
+                `Are you sure you want to delete your profile "${currentUser}"?\n\nThis will permanently remove:\n• All your habit data\n• All your goals\n• All your progress history\n\nThis action cannot be undone!`,
+                () => deleteCurrentUserProfile()
+            );
+        }
+        
+        function deleteCurrentUserProfile() {
+            if (currentUser) {
+                delete users[currentUser];
+                localStorage.setItem('habitTrackerUsers', JSON.stringify(users));
+                
+                // Show success message and logout
+                alert('✅ Your profile has been successfully deleted.');
+                logout();
+            }
+        }
+        
+        function adminDeleteUser(username) {
+            if (username.toLowerCase() === 'hamzah' || username.toLowerCase() === 'admin') {
+                alert('⚠️ Cannot delete the system owner account.');
+                return;
+            }
+            
+            showConfirmDialog(
+                '🗑️ Admin: Delete User',
+                `Are you sure you want to delete user "${username}"?\n\nThis will permanently remove:\n• All their habit data\n• All their goals\n• All their progress history\n\nThis action cannot be undone!`,
+                () => {
+                    delete users[username];
+                    localStorage.setItem('habitTrackerUsers', JSON.stringify(users));
+                    alert(`✅ User "${username}" has been deleted.`);
+                    showUserStats(); // Refresh the stats
+                }
+            );
+        }
+        
+        function showConfirmDialog(title, message, onConfirm) {
+            // Create confirmation dialog
+            const dialog = document.createElement('div');
+            dialog.className = 'confirm-dialog';
+            dialog.innerHTML = `
+                <div class="confirm-content">
+                    <h3>${title}</h3>
+                    <p style="white-space: pre-line;">${message}</p>
+                    <div class="confirm-buttons">
+                        <button class="btn btn-cancel" onclick="closeConfirmDialog()">Cancel</button>
+                        <button class="btn btn-danger" onclick="confirmAndClose()">Delete</button>
+                    </div>
+                </div>
+            `;
+            
+            // Store the confirm function globally for the button
+            window.currentConfirmAction = onConfirm;
+            
+            document.body.appendChild(dialog);
+        }
+        
+        function closeConfirmDialog() {
+            const dialog = document.querySelector('.confirm-dialog');
+            if (dialog) {
+                dialog.remove();
+            }
+            window.currentConfirmAction = null;
+        }
+        
+        function confirmAndClose() {
+            if (window.currentConfirmAction) {
+                window.currentConfirmAction();
+            }
+            closeConfirmDialog();
+        }
+        
+        // Goals are now loaded per user in loadUserData()
+    </script>
+</body>
+</html>
