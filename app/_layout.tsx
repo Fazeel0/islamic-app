@@ -6,56 +6,66 @@ import { StatusBar } from 'expo-status-bar';
 import 'react-native-reanimated';
 import { useEffect, useState } from 'react';
 import { View, ActivityIndicator } from 'react-native';
-
-import { useColorScheme } from '@/hooks/use-color-scheme';
-import { subscribeToAuthState } from '@/services/authService';
+import { Provider, useSelector } from 'react-redux';
+import { PersistGate } from 'redux-persist/integration/react';
+import { store, persistor } from '@/redux/store';
 
 export const unstable_settings = {
   anchor: '(tabs)',
 };
 
-export default function RootLayout() {
-  const colorScheme = useColorScheme();
-  const [loading, setLoading] = useState(true);
-  const [user, setUser] = useState<any>(null);
+function LoadingScreen() {
+  return (
+    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#667eea' }}>
+      <ActivityIndicator size="large" color="white" />
+    </View>
+  );
+}
+
+function AppContent() {
+  const [isReady, setIsReady] = useState(false);
+  const { user, isGuest } = useSelector((state: any) => state.auth);
+  const { isDarkMode } = useSelector((state: any) => state.theme);
 
   useEffect(() => {
-    // Subscribe to auth state changes
-    const unsubscribe = subscribeToAuthState((currentUser) => {
-      setUser(currentUser);
-      setLoading(false);
-    });
+    // Give time for redux-persist to rehydrate
+    const timer = setTimeout(() => {
+      setIsReady(true);
+    }, 1500);
 
-    return () => unsubscribe();
+    return () => clearTimeout(timer);
   }, []);
 
-  if (loading) {
-    return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#667eea' }}>
-        <ActivityIndicator size="large" color="white" />
-      </View>
-    );
+  if (!isReady) {
+    return <LoadingScreen />;
   }
 
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+    <ThemeProvider value={isDarkMode ? DarkTheme : DefaultTheme}>
       <Stack
         screenOptions={{
           headerShown: false,
         }}
       >
-        {user ? (
-          // User is logged in - show main app
-          <>
-            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-            <Stack.Screen name="modal" options={{ presentation: 'modal', title: 'Modal' }} />
-          </>
+        {/* Show tabs if user is logged in OR in guest mode */}
+        {(user || isGuest) ? (
+          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         ) : (
-          // User is not logged in - show login
+          /* Show login if not authenticated */
           <Stack.Screen name="login" options={{ headerShown: false }} />
         )}
       </Stack>
-      <StatusBar style="auto" />
+      <StatusBar style={isDarkMode ? "light" : "dark"} />
     </ThemeProvider>
+  );
+}
+
+export default function RootLayout() {
+  return (
+    <Provider store={store}>
+      <PersistGate loading={<LoadingScreen />} persistor={persistor}>
+        <AppContent />
+      </PersistGate>
+    </Provider>
   );
 }
