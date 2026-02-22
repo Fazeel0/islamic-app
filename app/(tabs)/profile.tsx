@@ -4,13 +4,15 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Ionicons } from '@expo/vector-icons';
 import { logout, setGuest } from '../../redux/slice/authSlice';
 import { toggleTheme } from '../../redux/slice/themeSlice';
+import { resetHabits } from '../../redux/slice/habitsSlice';
 import { logOut } from '../../services/authService';
-import { clearAllData } from '../../utils/storage';
+import { useAppTheme } from '../../hooks/useAppTheme';
+import { PURGE } from 'redux-persist';
 
 export default function Profile() {
   const dispatch = useDispatch();
   const { user, isGuest } = useSelector((state: any) => state.auth);
-  const { isDarkMode } = useSelector((state: any) => state.theme);
+  const { isDarkMode, classes } = useAppTheme();
 
   const handleLogout = () => {
     console.log('handleLogout called, isGuest:', isGuest);
@@ -39,7 +41,8 @@ export default function Profile() {
             onPress: async () => {
               try {
                 await logOut();
-                await clearAllData();
+                // Clear Redux persist storage and reset all state
+                dispatch({ type: PURGE, key: 'root' });
                 dispatch(logout());
                 router.replace('/login');
               } catch (error) {
@@ -65,8 +68,9 @@ export default function Profile() {
         { text: 'Cancel', style: 'cancel' },
         {
           text: 'Continue',
-          onPress: async () => {
-            await clearAllData();
+          onPress: () => {
+            // Clear persist and set guest mode
+            dispatch({ type: PURGE, key: 'root' });
             dispatch(setGuest());
             router.replace('/(tabs)');
           },
@@ -80,17 +84,17 @@ export default function Profile() {
   const handleToggleDarkMode = () => dispatch(toggleTheme());
 
   // Theme colors for dynamic styling
-  const bgColor = isDarkMode ? 'bg-gray-900' : 'bg-gray-100';
-  const surfaceColor = isDarkMode ? 'bg-gray-800' : 'bg-white';
-  const textColor = isDarkMode ? 'text-white' : 'text-gray-800';
-  const textSecondary = isDarkMode ? 'text-gray-400' : 'text-gray-500';
-  const primaryColor = isDarkMode ? 'bg-indigo-500' : 'bg-indigo-500';
+  const bgColor = classes.background;
+  const surfaceColor = classes.surface;
+  const textColor = classes.text;
+  const textSecondary = classes.textSecondary;
+  const primaryColor = classes.primary;
 
   return (
     <View className={`flex-1 ${bgColor}`}>
       {/* Header */}
-      <View className={`${primaryColor} pt-14 pb-5 px-5`}>
-        <Text className="text-2xl font-bold text-white">Profile</Text>
+      <View className={`${primaryColor} pt-12 pb-5 px-5`}>
+        <Text className="text-3xl font-bold text-white">Profile</Text>
         <Text className="text-sm text-white/80 mt-1">Manage your account</Text>
       </View>
 

@@ -34,6 +34,7 @@ export interface Habit {
   color?: string; // Custom color for the habit
   icon?: string; // Icon name
   isActive: boolean;
+  isDefault?: boolean; // Mark if this is a default habit
   createdAt: Date;
   updatedAt: Date;
 }

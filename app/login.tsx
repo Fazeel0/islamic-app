@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, KeyboardAvoidingView, Platform, ScrollView, Alert } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, KeyboardAvoidingView, Platform, ScrollView, Alert } from 'react-native';
 import { router } from 'expo-router';
 import { useDispatch } from 'react-redux';
 import { MaterialIcons } from '@expo/vector-icons';
@@ -33,7 +33,6 @@ export default function LoginScreen() {
       if (isSignUp) {
         const result = await signUp(email, password);
         if (result.success && result.user) {
-          // Store user in Redux
           dispatch(login({
             user: {
               uid: result.user.uid,
@@ -49,7 +48,6 @@ export default function LoginScreen() {
       } else {
         const result = await signIn(email, password);
         if (result.success && result.user) {
-          // Store user in Redux
           dispatch(login({
             user: {
               uid: result.user.uid,
@@ -71,36 +69,35 @@ export default function LoginScreen() {
   };
 
   const handleGuestMode = () => {
-    // Continue without login - user data will be stored locally only
     dispatch(setGuest());
     router.replace('/(tabs)');
   };
 
   return (
     <KeyboardAvoidingView 
-      style={styles.container}
+      className="flex-1 bg-indigo-500"
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
     >
-      <ScrollView contentContainerStyle={styles.scrollContent}>
-        <View style={styles.content}>
+      <ScrollView contentContainerClassName="flex-grow justify-center">
+        <View className="px-6">
           {/* Header */}
-          <View style={styles.header}>
+          <View className="items-center mb-10">
             <MaterialIcons name="assignment" size={64} color="white" />
-            <Text style={styles.title}>Personal Habit Tracker</Text>
-            <Text style={styles.subtitle}>
+            <Text className="text-3xl font-bold text-white text-center mt-4 mb-2">Personal Habit Tracker</Text>
+            <Text className="text-lg text-white/90 mb-2">
               {isSignUp ? 'Create your account' : 'Welcome back!'}
             </Text>
-            <Text style={styles.tagline}>
+            <Text className="text-sm text-white/70">
               Track your daily habits
             </Text>
           </View>
 
           {/* Form */}
-          <View style={styles.form}>
-            <View style={styles.inputContainer}>
-              <Text style={styles.label}>Email</Text>
+          <View className="bg-white rounded-2xl p-6">
+            <View className="mb-5">
+              <Text className="text-base font-semibold text-gray-700 mb-2">Email</Text>
               <TextInput
-                style={styles.input}
+                className="border-2 border-gray-200 rounded-xl p-4 text-base text-gray-800 bg-gray-50"
                 value={email}
                 onChangeText={setEmail}
                 placeholder="Enter your email"
@@ -111,10 +108,10 @@ export default function LoginScreen() {
               />
             </View>
 
-            <View style={styles.inputContainer}>
-              <Text style={styles.label}>Password</Text>
+            <View className="mb-5">
+              <Text className="text-base font-semibold text-gray-700 mb-2">Password</Text>
               <TextInput
-                style={styles.input}
+                className="border-2 border-gray-200 rounded-xl p-4 text-base text-gray-800 bg-gray-50"
                 value={password}
                 onChangeText={setPassword}
                 placeholder="Enter your password"
@@ -125,61 +122,61 @@ export default function LoginScreen() {
 
             {/* Error Message */}
             {error ? (
-              <View style={styles.errorContainer}>
-                <Text style={styles.errorText}>{error}</Text>
+              <View className="bg-red-100 p-3 rounded-lg mb-4">
+                <Text className="text-red-600 text-sm text-center">{error}</Text>
               </View>
             ) : null}
 
             {/* Submit Button */}
             <TouchableOpacity 
-              style={[styles.button, loading && styles.buttonDisabled]}
+              className={`bg-indigo-500 py-4 rounded-xl items-center mt-2 ${loading ? 'opacity-70' : ''}`}
               onPress={handleSubmit}
               disabled={loading}
             >
-              <Text style={styles.buttonText}>
+              <Text className="text-white text-lg font-bold">
                 {loading ? 'Please wait...' : isSignUp ? 'Create Account' : 'Sign In'}
               </Text>
             </TouchableOpacity>
 
             {/* Toggle Sign In/Sign Up */}
             <TouchableOpacity 
-              style={styles.toggleButton}
+              className="mt-4 items-center"
               onPress={() => {
                 setIsSignUp(!isSignUp);
                 setError('');
               }}
             >
-              <Text style={styles.toggleText}>
+              <Text className="text-indigo-500 text-base font-semibold">
                 {isSignUp ? 'Already have an account? Sign In' : "Don't have an account? Sign Up"}
               </Text>
             </TouchableOpacity>
 
             {/* Divider */}
-            <View style={styles.divider}>
-              <View style={styles.dividerLine} />
-              <Text style={styles.dividerText}>OR</Text>
-              <View style={styles.dividerLine} />
+            <View className="flex-row items-center mt-6 mb-4">
+              <View className="flex-1 h-px bg-gray-200" />
+              <Text className="text-gray-400 mx-4 text-sm">OR</Text>
+              <View className="flex-1 h-px bg-gray-200" />
             </View>
 
             {/* Continue as Guest */}
             <TouchableOpacity 
-              style={styles.guestButton}
+              className="bg-gray-100 py-4 rounded-xl items-center"
               onPress={handleGuestMode}
             >
-              <Text style={styles.guestButtonText}>
+              <Text className="text-gray-700 text-base font-semibold">
                 Continue as Guest
               </Text>
             </TouchableOpacity>
             
-            <Text style={styles.guestHint}>
+            <Text className="text-gray-400 text-xs text-center mt-3">
               Guest data is stored locally. Sign up to sync across devices.
             </Text>
 
             {/* Footer */}
-            <View style={styles.footer}>
-              <Text style={styles.footerVersion}>v1.0.0</Text>
-              <Text style={styles.footerDev}>Created by Hamzah</Text>
-              <Text style={styles.footerCopyright}>© 2026 - Personal Habit Tracking System</Text>
+            <View className="items-center mt-8 pb-5">
+              <Text className="text-gray-400 text-sm font-semibold">v1.0.0</Text>
+              <Text className="text-gray-400 text-xs mt-1">Created by Hamzah</Text>
+              <Text className="text-gray-400 text-xs mt-1">© 2026 - Personal Habit Tracking System</Text>
             </View>
           </View>
         </View>
@@ -187,148 +184,3 @@ export default function LoginScreen() {
     </KeyboardAvoidingView>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#667eea',
-  },
-  scrollContent: {
-    flexGrow: 1,
-    justifyContent: 'center',
-  },
-  content: {
-    padding: 24,
-  },
-  header: {
-    alignItems: 'center',
-    marginBottom: 40,
-  },
-  title: {
-    fontSize: 28,
-    fontWeight: 'bold',
-    color: 'white',
-    marginBottom: 8,
-    textAlign: 'center',
-  },
-  subtitle: {
-    fontSize: 18,
-    color: 'rgba(255,255,255,0.9)',
-    marginBottom: 8,
-  },
-  tagline: {
-    fontSize: 14,
-    color: 'rgba(255,255,255,0.7)',
-  },
-  form: {
-    backgroundColor: 'white',
-    borderRadius: 20,
-    padding: 24,
-  },
-  inputContainer: {
-    marginBottom: 20,
-  },
-  label: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#374151',
-    marginBottom: 8,
-  },
-  input: {
-    borderWidth: 2,
-    borderColor: '#E5E7EB',
-    borderRadius: 12,
-    padding: 16,
-    fontSize: 16,
-    color: '#1F2937',
-    backgroundColor: '#F9FAFB',
-  },
-  errorContainer: {
-    backgroundColor: '#FEE2E2',
-    padding: 12,
-    borderRadius: 8,
-    marginBottom: 16,
-  },
-  errorText: {
-    color: '#DC2626',
-    fontSize: 14,
-    textAlign: 'center',
-  },
-  button: {
-    backgroundColor: '#667eea',
-    padding: 18,
-    borderRadius: 12,
-    alignItems: 'center',
-    marginTop: 8,
-  },
-  buttonDisabled: {
-    opacity: 0.7,
-  },
-  buttonText: {
-    color: 'white',
-    fontSize: 18,
-    fontWeight: 'bold',
-  },
-  toggleButton: {
-    marginTop: 16,
-    alignItems: 'center',
-  },
-  toggleText: {
-    color: '#667eea',
-    fontSize: 16,
-    fontWeight: '600',
-  },
-  divider: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginTop: 24,
-    marginBottom: 16,
-  },
-  dividerLine: {
-    flex: 1,
-    height: 1,
-    backgroundColor: '#E5E7EB',
-  },
-  dividerText: {
-    color: '#9CA3AF',
-    marginHorizontal: 16,
-    fontSize: 14,
-  },
-  guestButton: {
-    backgroundColor: '#F3F4F6',
-    padding: 16,
-    borderRadius: 12,
-    alignItems: 'center',
-  },
-  guestButtonText: {
-    color: '#374151',
-    fontSize: 16,
-    fontWeight: '600',
-  },
-  guestHint: {
-    color: '#9CA3AF',
-    fontSize: 12,
-    textAlign: 'center',
-    marginTop: 12,
-  },
-  footer: {
-    alignItems: 'center',
-    marginTop: 30,
-    paddingBottom: 20,
-  },
-  footerVersion: {
-    color: '#9CA3AF',
-    fontSize: 14,
-    fontWeight: '600',
-  },
-  footerDev: {
-    color: '#9CA3AF',
-    fontSize: 12,
-    marginTop: 4,
-  },
-  footerCopyright: {
-    color: '#9CA3AF',
-    fontSize: 12,
-    marginTop: 4,
-  },
-});

@@ -1,9 +1,10 @@
+import { useAppTheme } from '@/hooks/useAppTheme';
+import { MaterialIcons } from '@expo/vector-icons';
 import { Tabs } from 'expo-router';
 import React from 'react';
-import { StyleSheet, View } from 'react-native';
-import { Ionicons, MaterialIcons } from '@expo/vector-icons';
 
 export default function TabLayout() {
+  const { isDarkMode, colors } = useAppTheme();
   return (
     <Tabs
       screenOptions={{
@@ -11,8 +12,8 @@ export default function TabLayout() {
         tabBarInactiveTintColor: '#9CA3AF',
         headerShown: false,
         tabBarStyle: {
-          backgroundColor: 'white',
-          borderTopWidth: 1,
+          backgroundColor: isDarkMode ? '#1F2937' : 'white',
+          borderTopWidth: 0,
           borderTopColor: '#E5E7EB',
           paddingTop: 0,
           paddingBottom: 0,
@@ -27,7 +28,7 @@ export default function TabLayout() {
           marginHorizontal: 0,
           paddingHorizontal: 0,
         },
-        tabBarActiveBackgroundColor: '#667eea',
+        tabBarActiveBackgroundColor: colors.tabBarActiveBg,
         tabBarInactiveBackgroundColor: 'transparent',
       }}>
       <Tabs.Screen

@@ -14,7 +14,7 @@ const getStorage = () => {
 const persistConfig = {
     key : 'root',
     storage : getStorage(),
-    whitelist : ['auth', 'theme']
+    whitelist : ['auth', 'theme', 'habits']
 }
 
 const persistedReducer = persistReducer(

@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "Personal Habit Tracker",
-    "slug": "islamic-habit-tracker",
+    "name": "Habit Tracker",
+    "slug": "habit-tracker",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/Icon-512.png",
@@ -13,7 +13,7 @@
       "bundleIdentifier": "com.habitracker.personal"
     },
     "android": {
-      "package": "com.habitracker.personal",
+      "package": "com.habitracker.app",
       "adaptiveIcon": {
         "backgroundColor": "#667eea",
         "foregroundImage": "./assets/images/Icon-512.png"
@@ -44,6 +44,13 @@
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": true
-    }
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "e4918044-4df8-432e-aecb-3797c3390816"
+      }
+    },
+    "owner": "fazee1s-organization"
   }
 }
