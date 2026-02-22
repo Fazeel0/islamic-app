@@ -1,10 +1,10 @@
-import { View, Text, ScrollView, TouchableOpacity, TextInput, Alert, Modal } from 'react-native';
-import { useState } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
 import { Ionicons } from '@expo/vector-icons';
-import { Habit, HabitCategory } from '../../types';
+import { useState } from 'react';
+import { Alert, Keyboard, KeyboardAvoidingView, Modal, Platform, ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { useDispatch, useSelector } from 'react-redux';
 import { useAppTheme } from '../../hooks/useAppTheme';
 import { addHabit, deleteHabit, toggleHabitActive } from '../../redux/slice/habitsSlice';
+import { Habit, HabitCategory } from '../../types';
 
 const CATEGORIES: { value: HabitCategory; label: string; emoji: string }[] = [
   { value: 'prayer', label: 'Prayer', emoji: '🙏' },
@@ -24,11 +24,11 @@ const CATEGORY_COLORS: Record<HabitCategory, string> = {
   other: '#667eea',
 };
 
-export default function Goals() {
+export default function Habits() {
   const [showModal, setShowModal] = useState(false);
   const [newHabitName, setNewHabitName] = useState('');
   const [newHabitCategory, setNewHabitCategory] = useState<HabitCategory>('other');
-  
+
   const dispatch = useDispatch();
   const { user, isGuest } = useSelector((state: any) => state.auth);
   const { habits } = useSelector((state: any) => state.habits);
@@ -87,7 +87,7 @@ export default function Goals() {
     <View className={`flex-1 ${classes.background}`}>
       {/* Header */}
       <View className={`px-5 pt-12 pb-5 ${classes.headerBg}`}>
-        <Text className="text-3xl font-bold text-white">Goals</Text>
+        <Text className="text-3xl font-bold text-white">Habits</Text>
         <Text className="text-sm text-white/80 mt-1">
           {isGuest ? 'Guest Mode' : 'Manage your habits'}
         </Text>
@@ -95,7 +95,7 @@ export default function Goals() {
 
       <ScrollView className="flex-1 p-4">
         {/* Add Button */}
-        <TouchableOpacity 
+        <TouchableOpacity
           className={`px-4 py-4 rounded-xl items-center mb-5 ${classes.primary}`}
           onPress={() => setShowModal(true)}
         >
@@ -124,7 +124,7 @@ export default function Goals() {
                           {habit.category.charAt(0).toUpperCase() + habit.category.slice(1)}
                         </Text>
                       </View>
-                      <TouchableOpacity 
+                      <TouchableOpacity
                         className={`px-3 py-1 rounded-lg ${habit.isActive ? classes.activeBg : classes.inactiveBg}`}
                         onPress={() => handleToggleActive(habit.id)}
                       >
@@ -133,11 +133,11 @@ export default function Goals() {
                         </Text>
                       </TouchableOpacity>
                     </View>
-                    
+
                     <Text className={`text-lg font-semibold mb-2 ${habit.isActive ? classes.text : classes.textSecondary}`}>
                       {habit.name}
                     </Text>
-                    
+
                     <View className="flex-row justify-between items-center">
                       <Text className={`text-sm ${classes.textSecondary}`}>
                         {habit.frequency.charAt(0).toUpperCase() + habit.frequency.slice(1)}
@@ -161,7 +161,7 @@ export default function Goals() {
                           {habit.category.charAt(0).toUpperCase() + habit.category.slice(1)}
                         </Text>
                       </View>
-                      <TouchableOpacity 
+                      <TouchableOpacity
                         className={`px-3 py-1 rounded-lg ${habit.isActive ? classes.activeBg : classes.inactiveBg}`}
                         onPress={() => handleToggleActive(habit.id)}
                       >
@@ -170,16 +170,16 @@ export default function Goals() {
                         </Text>
                       </TouchableOpacity>
                     </View>
-                    
+
                     <Text className={`text-lg font-semibold mb-2 ${habit.isActive ? classes.text : classes.textSecondary}`}>
                       {habit.name}
                     </Text>
-                    
+
                     <View className="flex-row justify-between items-center">
                       <Text className={`text-sm ${classes.textSecondary}`}>
                         {habit.frequency.charAt(0).toUpperCase() + habit.frequency.slice(1)}
                       </Text>
-                      <TouchableOpacity 
+                      <TouchableOpacity
                         className="px-3 py-1.5"
                         onPress={() => handleDeleteHabit(habit.id)}
                       >
@@ -195,11 +195,24 @@ export default function Goals() {
       </ScrollView>
 
       {/* Add Habit Modal */}
-      <Modal visible={showModal} animationType="slide" transparent>
-        <View className="flex-1 justify-end" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
-          <View className={`rounded-t-3xl p-6 pb-10 ${classes.surface}`}>
+      <Modal 
+        visible={showModal} 
+        animationType="slide" 
+        transparent
+        onRequestClose={() => setShowModal(false)}
+      >
+        <TouchableOpacity 
+          activeOpacity={1} 
+          style={{ flex: 1, backgroundColor: 'rgba(0,0,0,0.5)' }}
+          onPress={Keyboard.dismiss}
+        >
+          <View style={{ flex: 1, justifyContent: 'flex-end' }}>
+            <KeyboardAvoidingView
+              behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+            >
+              <View className={`rounded-t-3xl p-6 pb-20 ${classes.surface}`}>
             <Text className={`text-xl font-bold mb-5 text-center ${classes.text}`}>Add New Habit</Text>
-            
+
             <TextInput
               className={`border-2 rounded-xl p-4 text-base mb-5 ${isDarkMode ? 'bg-gray-900' : 'bg-gray-100'} ${isDarkMode ? 'border-gray-700' : 'border-gray-200'} ${classes.text}`}
               placeholder="Habit name"
@@ -207,7 +220,7 @@ export default function Goals() {
               onChangeText={setNewHabitName}
               placeholderTextColor={isDarkMode ? '#9CA3AF' : '#6B7280'}
             />
-            
+
             <Text className={`text-base font-semibold mb-3 ${classes.text}`}>Category</Text>
             <View className="flex-row flex-wrap mb-5">
               {CATEGORIES.map((cat) => (
@@ -220,7 +233,7 @@ export default function Goals() {
                   }}
                   onPress={() => setNewHabitCategory(cat.value)}
                 >
-                  <Text 
+                  <Text
                     className="text-sm"
                     style={{ color: newHabitCategory === cat.value ? 'white' : (isDarkMode ? '#F9FAFB' : '#1F2937') }}
                   >
@@ -229,9 +242,9 @@ export default function Goals() {
                 </TouchableOpacity>
               ))}
             </View>
-            
+
             <View className="flex-row">
-              <TouchableOpacity 
+              <TouchableOpacity
                 className={`flex-1 px-4 py-4 rounded-xl mr-2 ${isDarkMode ? 'bg-gray-700' : 'bg-gray-100'}`}
                 onPress={() => {
                   setShowModal(false);
@@ -241,15 +254,17 @@ export default function Goals() {
               >
                 <Text className={`text-base font-semibold text-center ${classes.textSecondary}`}>Cancel</Text>
               </TouchableOpacity>
-              <TouchableOpacity 
+              <TouchableOpacity
                 className={`flex-1 px-4 py-4 rounded-xl ml-2 ${classes.primary}`}
                 onPress={handleAddHabit}
               >
                 <Text className="text-white text-base font-semibold text-center">Add Habit</Text>
               </TouchableOpacity>
             </View>
+              </View>
+            </KeyboardAvoidingView>
           </View>
-        </View>
+        </TouchableOpacity>
       </Modal>
     </View>
   );

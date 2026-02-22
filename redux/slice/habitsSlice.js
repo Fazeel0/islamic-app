@@ -62,30 +62,6 @@ const DEFAULT_HABITS = [
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
   },
-  {
-    id: 'default-quran',
-    userId: 'default',
-    name: 'Read Quran',
-    category: 'quran',
-    frequency: 'daily',
-    targetCount: 1,
-    isActive: true,
-    isDefault: true,
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString(),
-  },
-  {
-    id: 'default-dhikr',
-    userId: 'default',
-    name: 'Morning/Evening Dhikr',
-    category: 'dhikr',
-    frequency: 'daily',
-    targetCount: 1,
-    isActive: true,
-    isDefault: true,
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString(),
-  },
 ];
 
 const initialState = {

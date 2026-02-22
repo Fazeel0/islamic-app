@@ -50,9 +50,9 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="goals"
+        name="habits"
         options={{
-          title: 'Goals',
+          title: 'Habits',
           tabBarIcon: ({ color }) => (
             <MaterialIcons name="flag" size={24} color={color} />
           ),

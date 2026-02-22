@@ -15,7 +15,8 @@ export default function DailyTracker() {
   const { isDarkMode, classes } = useAppTheme();
 
   // Get active habits
-  const activeHabits = habits.filter((h: any) => h.isActive);
+  const defaultHabits = habits.filter((h: any) => h.isDefault && h.isActive);
+  const customHabits = habits.filter((h: any) => !h.isDefault && h.isActive);
   
   // Get dates for the week
   const getWeekDates = () => {
@@ -34,8 +35,9 @@ export default function DailyTracker() {
   };
 
   // Calculate progress
-  const completedCount = activeHabits.filter((h: any) => isCompleted(h.id)).length;
-  const totalHabits = activeHabits.length;
+  const allActiveHabits = [...defaultHabits, ...customHabits];
+  const completedCount = allActiveHabits.filter((h: any) => isCompleted(h.id)).length;
+  const totalHabits = allActiveHabits.length;
   const progressPercent = totalHabits > 0 ? (completedCount / totalHabits) * 100 : 0;
 
   // Toggle completion
@@ -114,56 +116,117 @@ export default function DailyTracker() {
           </View>
         </View>
 
-        {/* Habits - Card changes color when completed */}
-        {activeHabits.map((habit: any) => {
-          const completed = isCompleted(habit.id);
-          const completedColors = getCompletedColors(completed);
-          
-          return (
-            <TouchableOpacity
-              key={habit.id}
-              className="rounded-xl p-4 mb-3"
-              style={{ 
-                backgroundColor: completedColors.bg || (isDarkMode ? '#1F2937' : '#FFFFFF'),
-                borderLeftWidth: 4,
-                borderLeftColor: completedColors.border || (isDarkMode ? '#374151' : '#E5E7EB'),
-                elevation: 2, 
-                shadowColor: '#000', 
-                shadowOffset: { width: 0, height: 1 }, 
-                shadowOpacity: 0.1, 
-                shadowRadius: 2 
-              }}
-              onPress={() => handleToggleCompletion(habit.id)}
-            >
-              <View className="flex-row items-center justify-between">
-                <View className="flex-row items-center flex-1">
-                  <Text className="text-2xl mr-3">{CATEGORY_ICONS[habit.category as HabitCategory]}</Text>
-                  <View className="flex-1">
-                    <Text className={`text-base font-semibold ${completed ? 'text-green-600' : classes.text}`}
-                      style={completed ? { color: completedColors.text } : {}}
-                    >
-                      {habit.name}
-                    </Text>
-                    <Text className={`text-xs ${classes.textSecondary}`}>
-                      {habit.category.charAt(0).toUpperCase() + habit.category.slice(1)}
-                    </Text>
-                  </View>
-                </View>
-                
-                <View 
-                  className="w-7 h-7 rounded-full items-center justify-center"
+        {/* Prayers Section - Default Habits */}
+        {defaultHabits.length > 0 && (
+          <View className="mb-4">
+            <Text className={`text-sm font-semibold mb-3 ml-1 ${classes.textSecondary}`}>🙏 Prayers</Text>
+            {defaultHabits.map((habit: any) => {
+              const completed = isCompleted(habit.id);
+              const completedColors = getCompletedColors(completed);
+              
+              return (
+                <TouchableOpacity
+                  key={habit.id}
+                  className="rounded-xl p-4 mb-3"
                   style={{ 
-                    borderWidth: 2,
-                    borderColor: completedColors.border || (isDarkMode ? '#374151' : '#E5E7EB'),
-                    backgroundColor: completed ? completedColors.border : 'transparent'
+                    backgroundColor: completedColors.bg || (isDarkMode ? '#1F2937' : '#FFFFFF'),
+                    borderLeftWidth: 4,
+                    borderLeftColor: completedColors.border || (isDarkMode ? '#374151' : '#E5E7EB'),
+                    elevation: 2, 
+                    shadowColor: '#000', 
+                    shadowOffset: { width: 0, height: 1 }, 
+                    shadowOpacity: 0.1, 
+                    shadowRadius: 2 
                   }}
+                  onPress={() => handleToggleCompletion(habit.id)}
                 >
-                  {completed && <Text className="text-white font-bold">✓</Text>}
-                </View>
-              </View>
-            </TouchableOpacity>
-          );
-        })}
+                  <View className="flex-row items-center justify-between">
+                    <View className="flex-row items-center flex-1">
+                      <Text className="text-2xl mr-3">{CATEGORY_ICONS[habit.category as HabitCategory]}</Text>
+                      <View className="flex-1">
+                        <Text className="text-base font-semibold"
+                          style={completed ? { color: completedColors.text } : { color: isDarkMode ? '#F9FAFB' : '#1F2937' }}
+                        >
+                          {habit.name}
+                        </Text>
+                        <Text className={`text-xs ${classes.textSecondary}`}>
+                          {habit.category.charAt(0).toUpperCase() + habit.category.slice(1)}
+                        </Text>
+                      </View>
+                    </View>
+                    
+                    <View 
+                      className="w-7 h-7 rounded-full items-center justify-center"
+                      style={{ 
+                        borderWidth: 2,
+                        borderColor: completedColors.border || (isDarkMode ? '#374151' : '#E5E7EB'),
+                        backgroundColor: completed ? completedColors.border : 'transparent'
+                      }}
+                    >
+                      {completed && <Text className="text-white font-bold">✓</Text>}
+                    </View>
+                  </View>
+                </TouchableOpacity>
+              );
+            })}
+          </View>
+        )}
+
+        {/* My Habits Section - Custom Habits */}
+        {customHabits.length > 0 && (
+          <View className="mb-4">
+            <Text className={`text-sm font-semibold mb-3 ml-1 ${classes.textSecondary}`}>📝 My Habits</Text>
+            {customHabits.map((habit: any) => {
+              const completed = isCompleted(habit.id);
+              const completedColors = getCompletedColors(completed);
+              
+              return (
+                <TouchableOpacity
+                  key={habit.id}
+                  className="rounded-xl p-4 mb-3"
+                  style={{ 
+                    backgroundColor: completedColors.bg || (isDarkMode ? '#1F2937' : '#FFFFFF'),
+                    borderLeftWidth: 4,
+                    borderLeftColor: completedColors.border || (isDarkMode ? '#374151' : '#E5E7EB'),
+                    elevation: 2, 
+                    shadowColor: '#000', 
+                    shadowOffset: { width: 0, height: 1 }, 
+                    shadowOpacity: 0.1, 
+                    shadowRadius: 2 
+                  }}
+                  onPress={() => handleToggleCompletion(habit.id)}
+                >
+                  <View className="flex-row items-center justify-between">
+                    <View className="flex-row items-center flex-1">
+                      <Text className="text-2xl mr-3">{CATEGORY_ICONS[habit.category as HabitCategory]}</Text>
+                      <View className="flex-1">
+                        <Text className="text-base font-semibold"
+                          style={completed ? { color: completedColors.text } : { color: isDarkMode ? '#F9FAFB' : '#1F2937' }}
+                        >
+                          {habit.name}
+                        </Text>
+                        <Text className={`text-xs ${classes.textSecondary}`}>
+                          {habit.category.charAt(0).toUpperCase() + habit.category.slice(1)}
+                        </Text>
+                      </View>
+                    </View>
+                    
+                    <View 
+                      className="w-7 h-7 rounded-full items-center justify-center"
+                      style={{ 
+                        borderWidth: 2,
+                        borderColor: completedColors.border || (isDarkMode ? '#374151' : '#E5E7EB'),
+                        backgroundColor: completed ? completedColors.border : 'transparent'
+                      }}
+                    >
+                      {completed && <Text className="text-white font-bold">✓</Text>}
+                    </View>
+                  </View>
+                </TouchableOpacity>
+              );
+            })}
+          </View>
+        )}
       </ScrollView>
     </View>
   );
